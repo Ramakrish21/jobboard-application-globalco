@@ -1,0 +1,36 @@
+package com.jobboard.dto.response;
+
+import lombok.*;
+
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
+public class JobResponse {
+
+    private Long id;
+
+    private String title;
+
+    private String company;
+
+    private String location;
+
+    private String jobType;
+
+    private String salary;
+
+    private String experience;
+
+    private String description;
+
+    private String skills;
+
+    private LocalDate applicationDeadline;
+    
+    private LocalDateTime postedDate;
+}
