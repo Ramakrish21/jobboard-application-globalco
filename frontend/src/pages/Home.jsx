@@ -9,8 +9,9 @@ function Home() {
   const [searchTerm, setSearchTerm] = useState("");
 
   useEffect(() => {
+    window.scrollTo(0, 0);
     loadJobs();
-  }, []);
+}, []);
 
   const loadJobs = async () => {
     try {
@@ -49,7 +50,12 @@ function Home() {
 
   if (loading) {
     return (
-      <div className="text-center mt-16 text-gray-500">Loading jobs...</div>
+            <div className="flex justify-center items-center h-80">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-12 w-12 border-4 border-blue-600 border-t-transparent mx-auto"></div>
+          <p className="mt-4 text-gray-500">Loading jobs...</p>
+        </div>
+      </div>
     );
   }
 
@@ -62,7 +68,9 @@ function Home() {
             Find your next role
           </h1>
           <p className="text-gray-500 mt-3 text-base sm:text-lg">
-            {jobs.length} open {jobs.length === 1 ? "position" : "positions"} waiting for you
+               Showing <span className="font-semibold">{filteredJobs.length}</span> of{" "}
+               <span className="font-semibold">{jobs.length}</span>{" "}
+              {jobs.length === 1 ? "job" : "jobs"}
           </p>
 
           <div className="mt-8 max-w-xl mx-auto relative">

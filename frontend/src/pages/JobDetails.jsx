@@ -16,9 +16,10 @@ function JobDetails() {
   const { id } = useParams();
   const [job, setJob] = useState(null);
 
-  useEffect(() => {
-    loadJob();
-  }, []);
+      useEffect(() => {
+      window.scrollTo(0, 0);
+      loadJob();
+    }, []);
 
   const loadJob = async () => {
     try {
@@ -32,7 +33,14 @@ function JobDetails() {
 
   if (!job) {
     return (
-      <div className="text-center mt-16 text-gray-500">Loading...</div>
+            <div className="flex justify-center items-center h-80">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-12 w-12 border-4 border-blue-600 border-t-transparent mx-auto"></div>
+          <p className="mt-4 text-gray-500">
+            Loading job details...
+          </p>
+        </div>
+      </div>
     );
   }
 
@@ -76,13 +84,17 @@ function JobDetails() {
             <p className="text-xs text-gray-400 mb-1">Application deadline</p>
             <div className="flex items-center gap-1.5 font-semibold text-gray-900">
               <CalendarClock size={16} />
-              {job.applicationDeadline || "—"}
+              {job.applicationDeadline
+                ? new Date(job.applicationDeadline).toLocaleDateString("en-IN")
+                : "—"}
             </div>
           </div>
           <div>
             <p className="text-xs text-gray-400 mb-1">Posted on</p>
             <p className="font-semibold text-gray-900">
-              {job.postedDate ? job.postedDate.split("T")[0] : "—"}
+              {job.postedDate
+                ? new Date(job.postedDate).toLocaleDateString("en-IN")
+                : "—"}
             </p>
           </div>
         </div>
@@ -101,7 +113,7 @@ function JobDetails() {
             Required skills
           </h2>
           <div className="flex flex-wrap gap-2">
-            {job.skills.split(",").map((skill, index) => (
+            {job.skills?.split(",").map((skill, index) => (
               <span
                 key={index}
                 className="bg-gray-100 text-gray-700 text-sm px-3 py-1.5 rounded-full"

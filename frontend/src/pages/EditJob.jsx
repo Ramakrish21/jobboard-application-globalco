@@ -17,9 +17,12 @@ function EditJob() {
     skills: "",
     applicationDeadline: "",
   });
+
   const [loading, setLoading] = useState(true);
+  const [submitting, setSubmitting] = useState(false);
 
   useEffect(() => {
+    window.scrollTo(0, 0);
     loadJob();
   }, []);
 
@@ -49,6 +52,8 @@ function EditJob() {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
+    setSubmitting(true);
+
     try {
       await updateJob(id, job);
 
@@ -58,18 +63,26 @@ function EditJob() {
     } catch (error) {
       console.error(error);
       alert("Failed to update job.");
+    } finally {
+      setSubmitting(false);
     }
   };
 
   if (loading) {
     return (
-      <div className="text-center mt-16 text-gray-500">Loading job...</div>
+      <div className="flex justify-center items-center h-80">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-12 w-12 border-4 border-blue-600 border-t-transparent mx-auto"></div>
+          <p className="mt-4 text-gray-500">Loading job...</p>
+        </div>
+      </div>
     );
   }
 
   return (
     <div className="max-w-3xl mx-auto px-4 sm:px-6 py-8 sm:py-12">
       <div className="bg-white shadow-md rounded-2xl p-6 sm:p-10">
+
         <h1 className="text-2xl sm:text-3xl font-bold text-center text-gray-800 mb-8">
           Edit Job
         </h1>
@@ -77,6 +90,7 @@ function EditJob() {
         <form onSubmit={handleSubmit} className="space-y-6">
 
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
+
             <div>
               <label className="block mb-1.5 text-sm font-medium text-gray-700">
                 Job Title
@@ -86,8 +100,8 @@ function EditJob() {
                 name="title"
                 value={job.title}
                 onChange={handleChange}
-                placeholder="e.g. Backend Developer"
                 required
+                placeholder="Backend Developer"
                 className="w-full border border-gray-300 p-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
               />
             </div>
@@ -101,8 +115,8 @@ function EditJob() {
                 name="company"
                 value={job.company}
                 onChange={handleChange}
-                placeholder="e.g. Google"
                 required
+                placeholder="Google"
                 className="w-full border border-gray-300 p-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
               />
             </div>
@@ -116,8 +130,8 @@ function EditJob() {
                 name="location"
                 value={job.location}
                 onChange={handleChange}
-                placeholder="e.g. Hyderabad"
                 required
+                placeholder="Hyderabad"
                 className="w-full border border-gray-300 p-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
               />
             </div>
@@ -126,15 +140,22 @@ function EditJob() {
               <label className="block mb-1.5 text-sm font-medium text-gray-700">
                 Job Type
               </label>
-              <input
-                type="text"
+
+              <select
                 name="jobType"
                 value={job.jobType}
                 onChange={handleChange}
-                placeholder="e.g. Full Time"
                 required
                 className="w-full border border-gray-300 p-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-              />
+              >
+                <option value="">Select Job Type</option>
+                <option value="Full Time">Full Time</option>
+                <option value="Part Time">Part Time</option>
+                <option value="Internship">Internship</option>
+                <option value="Contract">Contract</option>
+                <option value="Remote">Remote</option>
+              </select>
+
             </div>
 
             <div>
@@ -146,7 +167,7 @@ function EditJob() {
                 name="salary"
                 value={job.salary}
                 onChange={handleChange}
-                placeholder="e.g. 12 LPA"
+                placeholder="12 LPA"
                 className="w-full border border-gray-300 p-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
               />
             </div>
@@ -160,24 +181,26 @@ function EditJob() {
                 name="experience"
                 value={job.experience}
                 onChange={handleChange}
-                placeholder="e.g. 2 Years"
                 required
+                placeholder="2 Years"
                 className="w-full border border-gray-300 p-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
               />
             </div>
+
           </div>
 
           <div>
             <label className="block mb-1.5 text-sm font-medium text-gray-700">
               Job Description
             </label>
+
             <textarea
               name="description"
               value={job.description}
               onChange={handleChange}
-              placeholder="Describe the role and responsibilities..."
-              rows="4"
               required
+              rows="4"
+              placeholder="Describe the role..."
               className="w-full border border-gray-300 p-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 resize-none"
             />
           </div>
@@ -186,13 +209,14 @@ function EditJob() {
             <label className="block mb-1.5 text-sm font-medium text-gray-700">
               Required Skills
             </label>
+
             <textarea
               name="skills"
               value={job.skills}
               onChange={handleChange}
-              placeholder="e.g. Java, Spring Boot, React"
-              rows="3"
               required
+              rows="3"
+              placeholder="Java, Spring Boot, React"
               className="w-full border border-gray-300 p-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 resize-none"
             />
           </div>
@@ -201,6 +225,7 @@ function EditJob() {
             <label className="block mb-1.5 text-sm font-medium text-gray-700">
               Application Deadline
             </label>
+
             <input
               type="date"
               name="applicationDeadline"
@@ -210,13 +235,28 @@ function EditJob() {
             />
           </div>
 
-          <button
-            type="submit"
-            className="w-full bg-amber-500 text-white py-3.5 rounded-lg font-medium hover:bg-amber-600 transition-colors"
-          >
-            Update Job
-          </button>
+          <div className="flex flex-col sm:flex-row gap-4">
+
+            <button
+              type="submit"
+              disabled={submitting}
+              className="flex-1 bg-amber-500 text-white py-3.5 rounded-lg font-medium hover:bg-amber-600 transition disabled:bg-gray-400"
+            >
+              {submitting ? "Updating..." : "Update Job"}
+            </button>
+
+            <button
+              type="button"
+              onClick={() => navigate("/")}
+              className="flex-1 bg-gray-200 text-gray-700 py-3.5 rounded-lg font-medium hover:bg-gray-300 transition"
+            >
+              Cancel
+            </button>
+
+          </div>
+
         </form>
+
       </div>
     </div>
   );

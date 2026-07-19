@@ -1,13 +1,27 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Link, NavLink } from "react-router-dom";
 import { Menu, X } from "lucide-react";
 
 function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
 
+  useEffect(() => {
+    const handleResize = () => {
+      if (window.innerWidth >= 768) {
+        setIsOpen(false);
+      }
+    };
+
+    window.addEventListener("resize", handleResize);
+
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
+
   const linkClasses = ({ isActive }) =>
     `px-4 py-2 rounded-full text-sm font-medium transition-colors ${
-      isActive ? "bg-blue-600 text-white" : "text-gray-600 hover:bg-gray-100"
+      isActive
+        ? "bg-blue-600 text-white"
+        : "text-gray-600 hover:bg-gray-100"
     }`;
 
   return (
@@ -17,23 +31,31 @@ function Navbar() {
         {/* Logo */}
         <Link
           to="/"
-          className="text-xl sm:text-2xl text-blue-600 font-extrabold tracking-tight"
+          className="text-xl sm:text-2xl text-blue-600 font-extrabold tracking-tight hover:opacity-80 transition"
           onClick={() => setIsOpen(false)}
         >
           Job<span className="text-gray-800">Board</span>
         </Link>
 
-        {/* Desktop links */}
+        {/* Desktop Links */}
         <div className="hidden md:flex gap-2">
-          <NavLink to="/" className={linkClasses} end>
+          <NavLink
+            to="/"
+            className={linkClasses}
+            end
+          >
             Home
           </NavLink>
-          <NavLink to="/add-job" className={linkClasses}>
+
+          <NavLink
+            to="/add-job"
+            className={linkClasses}
+          >
             Add Job
           </NavLink>
         </div>
 
-        {/* Hamburger button */}
+        {/* Mobile Menu Button */}
         <button
           className="md:hidden text-gray-700"
           onClick={() => setIsOpen(!isOpen)}
@@ -44,9 +66,9 @@ function Navbar() {
         </button>
       </div>
 
-      {/* Mobile dropdown */}
+      {/* Mobile Menu */}
       {isOpen && (
-        <div className="md:hidden flex flex-col gap-1 px-4 sm:px-6 pb-4 border-t border-gray-100">
+        <div className="md:hidden flex flex-col gap-2 px-4 sm:px-6 pb-4 border-t border-gray-100">
           <NavLink
             to="/"
             end
@@ -55,6 +77,7 @@ function Navbar() {
           >
             Home
           </NavLink>
+
           <NavLink
             to="/add-job"
             className={linkClasses}
