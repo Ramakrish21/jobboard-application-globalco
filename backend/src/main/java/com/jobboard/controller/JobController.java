@@ -22,7 +22,7 @@ import jakarta.validation.Valid;
 
 @RestController
 @RequestMapping("/api/jobs")
-@CrossOrigin(origins = "jobboard-application-globalco.vercel.app")
+@CrossOrigin(origins = "https://jobboard-application-globalco.vercel.app")
 public class JobController {
 
     private final JobService jobService;
