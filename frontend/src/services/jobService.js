@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const API_URL = "http://localhost:8080/api/jobs";
+const API_URL = "https://jobboard-application-globalco-2.onrender.com/api/jobs";
 
 export const getAllJobs = () => {
   return axios.get(API_URL);
